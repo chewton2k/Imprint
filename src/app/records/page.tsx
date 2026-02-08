@@ -23,7 +23,7 @@ export default function RecordsPage() {
   useEffect(() => {
     fetch("/api/records")
       .then((res) => res.json())
-      .then((data) => setRecords(data))
+      .then((data) => setRecords(Array.isArray(data) ? data : []))
       .catch(() => setRecords([]))
       .finally(() => setLoading(false));
   }, []);
@@ -37,7 +37,7 @@ export default function RecordsPage() {
       setSearched(false);
       fetch("/api/records")
         .then((res) => res.json())
-        .then((data) => setRecords(data))
+        .then((data) => setRecords(Array.isArray(data) ? data : []))
         .catch(() => setRecords([]))
         .finally(() => setLoading(false));
       return;
@@ -66,7 +66,7 @@ export default function RecordsPage() {
     setLoading(true);
     fetch("/api/records")
       .then((res) => res.json())
-      .then((data) => setRecords(data))
+      .then((data) => setRecords(Array.isArray(data) ? data : []))
       .catch(() => setRecords([]))
       .finally(() => setLoading(false));
   };
