@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ProvenanceRecord {
+  id        String   @id @default(uuid())
+  schemaVersion String @default("1.0")
+
+  // Work
+  title       String
+  description String?
+  fileName    String
+  fileSize    Int
+  contentType String
+  contentHash String
+  createdAt   DateTime @default(now())
+
+  // Creator
+  displayName String
+  creatorId   String
+  publicKey   String
+
+  // Authorship Proof
+  signatureAlgorithm String @default("Ed25519")
+  signedPayloadHash  String
+  signature          String
+  signedAt           DateTime
+
+  // Usage Policy
+  license              String
+  aiTraining           String
+  aiDerivativeGeneration String
+  commercialUse        String
+  attributionRequired  Boolean
+  policyNote           String?
+  policyHash           String
+
+  @@index([contentHash])
+  @@index([creatorId])
+}
