@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
+*.md
+.DS_Store
+.env*
+!.env.example
+src/generated/prisma

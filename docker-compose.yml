@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    enable_ipv6: true
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "fd00:dead:beef::/48"
