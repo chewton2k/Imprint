@@ -17,8 +17,8 @@ COPY . .
 # Generate Prisma client (dummy URL — generate only needs the schema, not a real connection)
 RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy" npx prisma generate
 
-# Build Next.js
-RUN npm run build
+# Build Next.js (dummy URL — generate only needs the schema, not a real connection)
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy" npm run build
 
 # --- Runner ---
 FROM base AS runner

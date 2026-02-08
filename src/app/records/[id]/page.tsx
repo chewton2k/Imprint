@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import DeleteRecordSection from "./DeleteRecordSection";
 
 export const dynamic = "force-dynamic";
 
@@ -82,6 +83,8 @@ export default async function RecordPage({
           <Row label="Policy Hash" value={record.policyHash} mono />
         </div>
       </section>
+
+      <DeleteRecordSection recordId={record.id} />
 
       <section className="text-xs text-neutral-500 space-y-1">
         <p>
