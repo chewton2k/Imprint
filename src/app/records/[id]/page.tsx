@@ -38,6 +38,9 @@ export default async function RecordPage({
           <Row label="File" value={`${record.fileName} (${(record.fileSize / 1024).toFixed(1)} KB)`} />
           <Row label="Type" value={record.contentType} />
           <Row label="Content Hash" value={record.contentHash} mono />
+          {record.perceptualHash && (
+            <Row label="Perceptual Hash" value={record.perceptualHash} mono />
+          )}
           <Row label="Registered" value={new Date(record.signedAt).toLocaleString()} />
         </div>
       </section>

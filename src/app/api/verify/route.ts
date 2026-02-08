@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { contentHash, recordId } = body;
+    const { contentHash, recordId, perceptualHash } = body;
 
     if (!contentHash) {
       return NextResponse.json(
@@ -44,6 +44,30 @@ export async function POST(request: Request) {
     });
 
     if (records.length === 0) {
+      // Fallback: perceptual hash search
+      if (perceptualHash) {
+        const candidates = await prisma.provenanceRecord.findMany({
+          where: { perceptualHash: { not: null } },
+        });
+
+        const threshold = 10;
+        const matches = candidates
+          .map((r) => ({
+            ...r,
+            hammingDistance: hammingDist(perceptualHash, r.perceptualHash!),
+          }))
+          .filter((r) => r.hammingDistance <= threshold)
+          .sort((a, b) => a.hammingDistance - b.hammingDistance);
+
+        if (matches.length > 0) {
+          return NextResponse.json({
+            status: "PERCEPTUAL_MATCH",
+            message: `No exact hash match, but found ${matches.length} visually similar record(s) via perceptual hash.`,
+            records: matches,
+          });
+        }
+      }
+
       return NextResponse.json({
         status: "NOT_FOUND",
         message: "No provenance records found for this file.",
@@ -63,4 +87,18 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+}
+
+function hammingDist(a: string, b: string): number {
+  if (a.length !== b.length) return Infinity;
+  let distance = 0;
+  for (let i = 0; i < a.length; i++) {
+    const xor = parseInt(a[i], 16) ^ parseInt(b[i], 16);
+    let bits = xor;
+    while (bits) {
+      distance += bits & 1;
+      bits >>= 1;
+    }
+  }
+  return distance;
 }

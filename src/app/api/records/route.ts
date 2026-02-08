@@ -25,6 +25,7 @@ export async function POST(request: Request) {
       attributionRequired,
       policyNote,
       policyHash,
+      perceptualHash,
     } = body;
 
     // Validate required fields
@@ -72,6 +73,7 @@ export async function POST(request: Request) {
         attributionRequired: Boolean(attributionRequired),
         policyNote: policyNote || null,
         policyHash,
+        perceptualHash: perceptualHash || null,
       },
     });
 

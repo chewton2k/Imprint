@@ -10,6 +10,7 @@ import {
   sign,
   type UsagePolicy,
 } from "@/lib/crypto";
+import { isImageType, computePerceptualHash } from "@/lib/phash";
 
 type Step = "upload" | "metadata" | "policy" | "sign" | "done";
 
@@ -44,6 +45,11 @@ export default function RegisterPage() {
   const [commercialUse, setCommercialUse] = useState("DENIED");
   const [attributionRequired, setAttributionRequired] = useState(true);
   const [policyNote, setPolicyNote] = useState("");
+
+  // Perceptual Hash
+  const [enablePHash, setEnablePHash] = useState(false);
+  const [perceptualHash, setPerceptualHash] = useState("");
+  const [computingPHash, setComputingPHash] = useState(false);
 
   // Result
   const [signing, setSigning] = useState(false);
@@ -131,6 +137,7 @@ export default function RegisterPage() {
           attributionRequired,
           policyNote,
           policyHash,
+          perceptualHash: enablePHash ? perceptualHash : null,
         }),
       });
 
@@ -184,6 +191,8 @@ export default function RegisterPage() {
     commercialUse,
     attributionRequired,
     policyNote,
+    enablePHash,
+    perceptualHash,
   ]);
 
   return (
@@ -251,6 +260,43 @@ export default function RegisterPage() {
           <div className="text-xs font-mono text-neutral-500 bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg break-all">
             SHA-256: {contentHash}
           </div>
+          {file && isImageType(file.type) && (
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={enablePHash}
+                  onChange={async (e) => {
+                    const checked = e.target.checked;
+                    setEnablePHash(checked);
+                    if (checked && !perceptualHash && file) {
+                      setComputingPHash(true);
+                      try {
+                        const ph = await computePerceptualHash(file);
+                        setPerceptualHash(ph);
+                      } catch {
+                        setError("Failed to compute perceptual hash.");
+                        setEnablePHash(false);
+                      } finally {
+                        setComputingPHash(false);
+                      }
+                    }
+                  }}
+                  disabled={computingPHash}
+                  className="rounded"
+                />
+                Enable perceptual hash (helps identify visually similar images)
+              </label>
+              {computingPHash && (
+                <p className="text-xs text-neutral-500">Computing perceptual hash...</p>
+              )}
+              {enablePHash && perceptualHash && (
+                <div className="text-xs font-mono text-neutral-500 bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg break-all">
+                  pHash: {perceptualHash}
+                </div>
+              )}
+            </div>
+          )}
           <label className="block">
             <span className="text-sm font-medium">
               Title <span className="text-red-500">*</span>
@@ -429,6 +475,12 @@ export default function RegisterPage() {
               <span className="font-medium">Attribution:</span>{" "}
               {attributionRequired ? "Required" : "Not required"}
             </div>
+            {enablePHash && perceptualHash && (
+              <div className="break-all">
+                <span className="font-medium">Perceptual Hash:</span>{" "}
+                <code className="text-xs">{perceptualHash}</code>
+              </div>
+            )}
           </div>
 
           <p className="text-xs text-neutral-500">

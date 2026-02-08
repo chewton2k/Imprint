@@ -17,8 +17,9 @@ model ProvenanceRecord {
   fileName    String
   fileSize    Int
   contentType String
-  contentHash String
-  createdAt   DateTime @default(now())
+  contentHash    String
+  perceptualHash String?
+  createdAt      DateTime @default(now())
 
   // Creator
   displayName String
@@ -41,5 +42,6 @@ model ProvenanceRecord {
   policyHash           String
 
   @@index([contentHash])
+  @@index([perceptualHash])
   @@index([creatorId])
 }
