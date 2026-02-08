@@ -204,31 +204,66 @@ export default function RegisterPage() {
         </p>
       </div>
 
-      {/* Progress */}
-      <div className="flex gap-2 text-xs">
-        {(["upload", "metadata", "policy", "sign", "done"] as Step[]).map(
-          (s) => (
-            <span
-              key={s}
-              className={`px-3 py-1 rounded-full border ${
-                step === s
-                  ? "bg-foreground text-background border-foreground"
-                  : "border-neutral-300 dark:border-neutral-700 text-neutral-400"
-              }`}
-            >
-              {s === "upload"
-                ? "File"
-                : s === "metadata"
-                  ? "Details"
-                  : s === "policy"
-                    ? "Policy"
-                    : s === "sign"
-                      ? "Sign"
-                      : "Done"}
-            </span>
-          )
-        )}
-      </div>
+      {/* Progress Stepper */}
+      {(() => {
+        const steps: { key: Step; label: string }[] = [
+          { key: "upload", label: "File" },
+          { key: "metadata", label: "Details" },
+          { key: "policy", label: "Policy" },
+          { key: "sign", label: "Sign" },
+          { key: "done", label: "Done" },
+        ];
+        const currentIndex = steps.findIndex((s) => s.key === step);
+        return (
+          <div className="flex items-center w-full">
+            {steps.map((s, i) => {
+              const isCompleted = i < currentIndex;
+              const isCurrent = i === currentIndex;
+              return (
+                <div key={s.key} className="flex items-center flex-1 last:flex-none">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold border-2 transition-colors ${
+                        isCompleted
+                          ? "bg-foreground border-foreground text-background"
+                          : isCurrent
+                            ? "border-foreground text-foreground bg-transparent"
+                            : "border-neutral-300 dark:border-neutral-700 text-neutral-400 bg-transparent"
+                      }`}
+                    >
+                      {isCompleted ? (
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        i + 1
+                      )}
+                    </div>
+                    <span
+                      className={`mt-1.5 text-xs font-medium ${
+                        isCompleted || isCurrent
+                          ? "text-foreground"
+                          : "text-neutral-400"
+                      }`}
+                    >
+                      {s.label}
+                    </span>
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div
+                      className={`flex-1 h-0.5 mx-2 mb-5 ${
+                        i < currentIndex
+                          ? "bg-foreground"
+                          : "bg-neutral-300 dark:bg-neutral-700"
+                      }`}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {error && (
         <div className="text-sm text-red-600 bg-red-50 dark:bg-red-950 dark:text-red-400 p-3 rounded-lg">
@@ -239,6 +274,8 @@ export default function RegisterPage() {
       {/* Step 1: Upload */}
       {step === "upload" && (
         <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Step 1: Upload Your File</h2>
+          <p className="text-sm text-neutral-500">Choose the file you want to register. It will be hashed locally — never uploaded.</p>
           <label className="block">
             <span className="text-sm font-medium">Select a file</span>
             <input
@@ -257,6 +294,8 @@ export default function RegisterPage() {
       {/* Step 2: Metadata */}
       {step === "metadata" && (
         <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Step 2: File Details</h2>
+          <p className="text-sm text-neutral-500">Add a title, description, and your display name.</p>
           <div className="text-xs font-mono text-neutral-500 bg-neutral-100 dark:bg-neutral-900 p-3 rounded-lg break-all">
             SHA-256: {contentHash}
           </div>
@@ -344,6 +383,8 @@ export default function RegisterPage() {
       {/* Step 3: Policy */}
       {step === "policy" && (
         <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Step 3: Usage Policy</h2>
+          <p className="text-sm text-neutral-500">Set a license and define how your work can be used.</p>
           <label className="block">
             <span className="text-sm font-medium">License</span>
             <select
@@ -440,7 +481,8 @@ export default function RegisterPage() {
       {/* Step 4: Review & Sign */}
       {step === "sign" && (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Review & Sign</h2>
+          <h2 className="text-lg font-semibold">Step 4: Review & Sign</h2>
+          <p className="text-sm text-neutral-500">Confirm everything looks correct, then sign to create your record.</p>
 
           <div className="rounded-lg border border-neutral-200 dark:border-neutral-800 p-4 space-y-3 text-sm">
             <div>
