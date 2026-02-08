@@ -390,7 +390,7 @@ export default function RegisterPage() {
             <select
               value={license}
               onChange={(e) => setLicense(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+              className="mt-1 block w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2 text-sm"
             >
               {LICENSE_OPTIONS.map((l) => (
                 <option key={l} value={l}>
@@ -407,7 +407,7 @@ export default function RegisterPage() {
               <select
                 value={aiTraining}
                 onChange={(e) => setAiTraining(e.target.value)}
-                className="rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-2 py-1 text-sm"
+                className="rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-sm"
               >
                 <option value="DENIED">DENIED</option>
                 <option value="ALLOWED">ALLOWED</option>
@@ -419,7 +419,7 @@ export default function RegisterPage() {
               <select
                 value={aiDerivative}
                 onChange={(e) => setAiDerivative(e.target.value)}
-                className="rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-2 py-1 text-sm"
+                className="rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-sm"
               >
                 <option value="DENIED">DENIED</option>
                 <option value="ALLOWED">ALLOWED</option>
@@ -431,7 +431,7 @@ export default function RegisterPage() {
               <select
                 value={commercialUse}
                 onChange={(e) => setCommercialUse(e.target.value)}
-                className="rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-2 py-1 text-sm"
+                className="rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-2 py-1 text-sm"
               >
                 <option value="DENIED">DENIED</option>
                 <option value="ALLOWED">ALLOWED</option>

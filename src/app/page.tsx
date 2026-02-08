@@ -44,8 +44,10 @@ export default function Home() {
         <h2 className="text-xl font-semibold">How it works</h2>
         <ol className="list-decimal list-inside space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
           <li>
-            Your file is hashed (SHA-256) entirely in your browser — nothing is
-            uploaded to a server.
+            Your file is hashed (SHA-256) entirely in your browser, nothing is
+            uploaded to a server. For images, you can optionally enable
+            perceptual hashing (pHash) to help detect visually similar copies,
+            even if the file has been compressed or slightly altered.
           </li>
           <li>
             An Ed25519 keypair is generated locally. Your private key never
